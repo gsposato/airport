@@ -15,6 +15,7 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use common\models\Airport;
 
 /**
  * Site controller
@@ -254,6 +255,85 @@ class SiteController extends Controller
 
         return $this->render('resendVerificationEmail', [
             'model' => $model
+        ]);
+    }
+
+    /**
+     * Problem 2
+     */
+    public function actionAirportsWithinRadius(
+        float $lat,
+        float $lng,
+        float $radius = 100
+    ): array {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        return json_encode([
+            'center' => compact('lat', 'lng'),
+            'radius_miles' => $radius,
+            'airports' => Airport::findWithinRadius($lat, $lng, $radius),
+        ]);
+    }
+
+    /**
+     * Problem 3
+     */
+    public function actionDistanceBetweenAirports(
+        string $from,
+        string $to
+    ): array {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $distance = Airport::distanceBetweenIata($from, $to);
+
+        if ($distance === null) {
+            return ['error' => 'Invalid airport IATA code'];
+        }
+
+        return json_encode([
+            'from' => $from,
+            'to' => $to,
+            'distance_miles' => round($distance, 2),
+        ]);
+    }
+
+    /**
+     * Problem 4
+     */
+    public function actionClosestAirportsBetweenCountries(
+        string $c1,
+        string $c2
+    ): array {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        return json_encode([
+            'country_1' => $c1,
+            'country_2' => $c2,
+            'closest_pair' => Airport::closestBetweenCountries($c1, $c2),
+        ]);
+    }
+
+    /**
+     * Problem 5
+     */
+    public function actionRoute(
+        string $from,
+        string $to,
+        int $maxDistance = null
+    ): array {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $service = Yii::$app->routeService;
+
+        if ($maxDistance !== null) {
+            $service->maxDistanceMiles = $maxDistance;
+        }
+
+        return json_encode([
+            'from' => $from,
+            'to' => $to,
+            'max_leg_distance_miles' => $service->maxDistanceMiles,
+            'stops' => $service->findRoute($from, $to),
         ]);
     }
 }

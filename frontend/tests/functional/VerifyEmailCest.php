@@ -5,6 +5,7 @@ namespace frontend\tests\functional;
 use common\fixtures\UserFixture;
 use common\models\User;
 use frontend\tests\FunctionalTester;
+use Yii;
 
 class VerifyEmailCest
 {
@@ -55,9 +56,10 @@ class VerifyEmailCest
 
     public function checkSuccessVerification(FunctionalTester $I)
     {
+        $name = Yii::$app->name;
         $I->amOnRoute('site/verify-email', ['token' => '4ch0qbfhvWwkcuWqjN8SWRq72SOw1KYT_1548675330']);
         $I->canSee('Your email has been confirmed!');
-        $I->canSee('Congratulations!', 'h1');
+        $I->canSee($name, 'h1');
         $I->dontSee('Logout (test.test)', 'form button[type=submit]');
         $I->seeRecord('common\models\User', [
             'username' => 'test.test',

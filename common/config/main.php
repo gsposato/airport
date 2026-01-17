@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'name' => 'Airport Geospatial API', // this can be renamed
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',

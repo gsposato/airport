@@ -1,0 +1,8 @@
+#!/bin/bash
+#./yii gii/crud --controllerClass "frontend\controllers\PurchaseController" --modelClass "common\models\Purchase"
+#php vendor/bin/codecept generate:test unit PlayerComplaint -c common # make new test
+#php vendor/bin/codecept generate:cest functional NewAirport -c frontend # make new cest
+#php vendor/bin/codecept run common/tests/unit/PurchaseTest.php --fail-fast # run fewer tests
+#php vendor/bin/codecept run frontend/tests/functional/NewAirportCest.php --fail-fast # run cest
+#vim $(git status -suall --porcelain | awk '{ print $2 }') # edit new files
+php vendor/bin/codecept run -v --fail-fast # run all tests (slow)
